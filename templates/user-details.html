@@ -1,5 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{{user.first_name}}'s Page</h1>
+<h1>{{user.first_name}}'s User Detail Page</h1>
+<ul>
+    <li>Username: {{user.username}}</li>
+    <li>Email: {{user.email}}</li>
+    <li>First Name: {{user.first_name}}</li>
+    <li>Last Name: {{user.last_name}}</li>
+</ul>
+
+<a href="/users/{{user.username}}/feedback/add">Add Feedback</a>
+
+<div>
+    <h2>{{user.username}}'s Feedback</h2>
+    <ul>
+    {% if feedback %}
+        {% for comment in feedback %}
+        <li><a href="/feedback/{{comment.id}}/update">{{comment.title}}</a>
+            <form method="POST" action="/feedback/{{comment.id}}/delete"><button>X</button></form>
+        </li>
+        {% endfor %}
+    {% endif %}
+</div>
 {% endblock %}
