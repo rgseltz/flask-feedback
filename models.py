@@ -23,3 +23,9 @@ class User(db.Model):
     first_name = db.Column(db.String(30), nullable=False)
 
     last_name = db.Column(db.String(30), nullable=False)
+
+    @classmethod
+    def register(cls, username, pwd, email, first, last):
+        hashed = bcrypt.generate_password_hash(pwd)
+        hashed_utf8 = hashed.decode("utf")
+        return cls(username=username, password=hashed_utf8, email=email, first_name=first, last_name=last)
