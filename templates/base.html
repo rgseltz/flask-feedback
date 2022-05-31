@@ -16,11 +16,23 @@
                 <li class="nav-item">
                     <a class="nav-link text-light" href="/register">Sign up</a>
                   </li>
+                  {% if session["username"] %}
+                  <li class="nav-item">
+                    <a class="nav-link text-light" href="/secret">Secret</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link text-light" href="/logout">Logout</a>
+                  </li>
+                  {% else %}
+                  <li class="nav-item">
+                    <a class="nav-link text-light" href="/login">Login</a>
+                  </li>
+                  {% endif %}
             </ul>
             </div>
             </nav>
     <div class="container">
-        {% for msg in get_flashed_messages(with_categories=True) %}
+        {% for msg in get_flashed_messages() %}
         <div class="">{{msg}}</div>
         {% endfor %}
         

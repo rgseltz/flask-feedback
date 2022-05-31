@@ -2,7 +2,7 @@ from click import password_option
 from flask import Flask, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User
-from forms import NewUserForm
+from forms import NewUserForm, UserForm
 # from forms import UserForm
 
 app = Flask(__name__)
@@ -35,6 +35,40 @@ def register_user():
                                  email=email, first=first_name, last=last_name)
         db.session.add(new_user)
         db.session.commit()
-        return redirect('/')
+        return redirect('/secret')
     else:
         return render_template('register.html', form=form)
+
+
+@app.route('/login', methods=["GET", "POST"])
+def login_user():
+    form = UserForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
+        user = User.authenticate(username, password)
+
+        if user:
+            flash(f'Welcome back {user.first_name}')
+            print(session)
+            session['username'] = user.username
+            return redirect('/secret')
+        else:
+            form.username.errors = ['Invalid username/password']
+            return render_template('login.html', form=form)
+    else:
+        return render_template('login.html', form=form)
+
+
+@app.route('/secret', methods=["GET"])
+def show_secret():
+    if "username" not in session:
+        return redirect('/')
+    return render_template('secret.html')
+
+
+@app.route('/logout', methods=["GET"])
+def logout_user():
+    session.pop("username")
+    return redirect('/')
