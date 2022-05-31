@@ -1,3 +1,4 @@
+from http.client import UNAUTHORIZED
 from click import password_option
 from flask import Flask, render_template, redirect, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
@@ -53,7 +54,7 @@ def login_user():
             flash(f'Welcome back {user.first_name}')
             print(session)
             session['username'] = user.username
-            return redirect('/secret')
+            return redirect(f'/users/{username}')
         else:
             form.username.errors = ['Invalid username/password']
             return render_template('login.html', form=form)
@@ -61,14 +62,17 @@ def login_user():
         return render_template('login.html', form=form)
 
 
-@app.route('/secret', methods=["GET"])
-def show_secret():
-    if "username" not in session:
-        return redirect('/')
-    return render_template('secret.html')
-
-
 @app.route('/logout', methods=["GET"])
 def logout_user():
     session.pop("username")
     return redirect('/')
+
+
+@app.route('/users/<username>', methods=["GET"])
+def show_secret(username):
+    user = User.query.get_or_404(username)
+    if session["username"] == username:
+        return render_template('user-details.html', user=user)
+    else:
+        flash('You are not authorized to access that page!')
+        return redirect('/login')
