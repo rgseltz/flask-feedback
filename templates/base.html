@@ -9,10 +9,21 @@
     <title>Document</title>
 </head>
 <body>
+    <body>
+        <nav class="navbar navbar-light bg-primary justify-content-between ">
+          <div class="container">
+            <ul>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/register">Sign up</a>
+                  </li>
+            </ul>
+            </div>
+            </nav>
     <div class="container">
         {% for msg in get_flashed_messages(with_categories=True) %}
         <div class="">{{msg}}</div>
         {% endfor %}
+        
         {% block content %}
         {% endblock %}
     </div>

@@ -13,3 +13,13 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 
 connect_db(app)
+
+
+@app.route('/', methods=["GET"])
+def show_index():
+    return render_template('index.html')
+
+
+@app.route('/register', methods=["GET", "POST"])
+def register_user():
+    return render_template('register.html')
